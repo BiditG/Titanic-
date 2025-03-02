@@ -29,5 +29,8 @@ plt.title('Fare Distribution')
 
 removed_df = df[df["age"]<62]
 sns.boxplot(removed_df["age"])
+
+print(df.isnull().sum())
+print (df["age"].fillna(df["age"].median(), inplace=True))
 plt.tight_layout()  
 plt.show()
