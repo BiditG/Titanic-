@@ -45,9 +45,7 @@ df["embarked"] = df["embarked"].fillna(df["embarked"].mode()[0])  # Fixed chaine
 df["embark_town"] = df["embark_town"].fillna(df["embark_town"].mode()[0])  # Fixed chained assignment
 
 # Handle missing "deck" values by adding a new category "H" and filling missing values with "H"
-df["deck"] = df["deck"].astype("category")  # Ensure "deck" is categorical
-df["deck"] = df["deck"].cat.add_categories("H")  
-df["deck"].fillna("H", inplace=True)
+df["deck"] = df["deck"].fillna("H")  # Fixed inplace warning
 
 # Check for missing values again
 print(df.isnull().sum())  # This should now show no missing values for "age", "embarked", "embark_town", or "deck"
@@ -56,19 +54,22 @@ print(df.isnull().sum())  # This should now show no missing values for "age", "e
 print(df.duplicated().sum())
 
 # Define categorical columns (assuming these columns are categorical)
-cat_cols = ["embarked", "embark_town", "deck"]  # You can add more columns here if needed
+cat_cols = ["embarked", "embark_town", "deck", "sex"]  
 
 # Label encoding for categorical columns
+le = LabelEncoder()
 for col in cat_cols:
-    le = LabelEncoder()
     df[col] = le.fit_transform(df[col])
 
-# Define the feature columns
+# Define the feature columns (exclude "survived" column)
 feature_cols = df.drop(columns=["survived"]).columns  # Fixed column drop
 
 # Scaling the features (standard scaling and min-max scaling)
 scaler = StandardScaler()
-df[feature_cols] = scaler.fit_transform(df[feature_cols])
+
+# Only apply scaling to numeric columns
+numeric_cols = df[feature_cols].select_dtypes(include=["float64", "int64"]).columns
+df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
 
 # Display the plots
 plt.tight_layout()  
