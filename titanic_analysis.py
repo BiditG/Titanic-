@@ -26,5 +26,8 @@ plt.subplot(1, 2, 2)  # Second subplot
 sns.histplot(df["fare"], kde=True)
 plt.title('Fare Distribution')
 
+
+removed_df = df[df["age"]<62]
+sns.boxplot(removed_df["age"])
 plt.tight_layout()  
 plt.show()
