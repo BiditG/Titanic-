@@ -1,5 +1,5 @@
 import pandas as pd
-import seaborn as sn
+import seaborn as sns
 import matplotlib.pyplot as plt
 
 df = pd.read_csv("titanic.csv")
@@ -14,6 +14,17 @@ print(df["age"].std())
 print(df["age"].var())
 print(df.columns)
 print(df["fare"].skew())
-df["fare"].hist()
-plt.show()  
 
+
+plt.figure(figsize = (10, 5)) 
+
+plt.subplot(1, 2, 1)  # First subplot
+sns.histplot(df["age"], kde=True)
+plt.title('Age Distribution')
+
+plt.subplot(1, 2, 2)  # Second subplot
+sns.histplot(df["fare"], kde=True)
+plt.title('Fare Distribution')
+
+plt.tight_layout()  
+plt.show()
