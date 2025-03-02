@@ -54,7 +54,7 @@ print(df.isnull().sum())  # This should now show no missing values for "age", "e
 print(df.duplicated().sum())
 
 # Define categorical columns (assuming these columns are categorical)
-cat_cols = ["embarked", "embark_town", "deck", "sex"]  
+cat_cols = ["embarked", "embark_town", "deck", "sex"]
 
 # Label encoding for categorical columns
 le = LabelEncoder()
@@ -62,7 +62,7 @@ for col in cat_cols:
     df[col] = le.fit_transform(df[col])
 
 # Define the feature columns (exclude "survived" column)
-feature_cols = df.drop(columns=["survived"]).columns  # Fixed column drop
+feature_cols = df.drop(columns=["survived", "Unnamed: 0"]).columns  # Excluding 'Unnamed: 0' (index column)
 
 # Scaling the features (standard scaling and min-max scaling)
 scaler = StandardScaler()
@@ -71,7 +71,11 @@ scaler = StandardScaler()
 numeric_cols = df[feature_cols].select_dtypes(include=["float64", "int64"]).columns
 df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
 
-# Display the plots
-plt.tight_layout()  
-plt.show()
+# Correlation Matrix (Now, it will work since only numeric columns are included)
+correlation_matrix = df[numeric_cols].corr()  # Only pass numeric columns for correlation
 
+# Generate a heatmap for the correlation matrix
+plt.figure(figsize=(10, 8))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
+plt.title('Correlation Heatmap')
+plt.show()
