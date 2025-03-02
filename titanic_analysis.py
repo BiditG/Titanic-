@@ -2,22 +2,23 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, LabelEncoder  # Corrected import
+from sklearn.model_selection import train_test_split  # Ensure proper import
 
 # Load the Titanic dataset
 df = pd.read_csv("titanic.csv")
 
 # Display basic information about the dataset
-df.head()
-df.describe()
-print(df.size)
-print(df.shape)
-print(df["age"].mean())
-print(df["age"].median())
-print(df["age"].mode())
-print(df["age"].std())
-print(df["age"].var())
-print(df.columns)
-print(df["fare"].skew())
+print(df.head())  # Display the first few rows
+print(df.describe())  # Summary statistics for numerical columns
+print(f"Size: {df.size}")
+print(f"Shape: {df.shape}")
+print(f"Mean of age: {df['age'].mean()}")
+print(f"Median of age: {df['age'].median()}")
+print(f"Mode of age: {df['age'].mode()}")
+print(f"Standard deviation of age: {df['age'].std()}")
+print(f"Variance of age: {df['age'].var()}")
+print(f"Columns: {df.columns}")
+print(f"Skew of fare: {df['fare'].skew()}")
 
 # Create subplots for Age and Fare distributions
 plt.figure(figsize=(10, 5))
@@ -51,7 +52,7 @@ df["deck"] = df["deck"].fillna("H")  # Fixed inplace warning
 print(df.isnull().sum())  # This should now show no missing values for "age", "embarked", "embark_town", or "deck"
 
 # Check for duplicates in the dataset
-print(df.duplicated().sum())
+print(f"Duplicate rows: {df.duplicated().sum()}")
 
 # Define categorical columns (assuming these columns are categorical)
 cat_cols = ["embarked", "embark_town", "deck", "sex"]
@@ -78,4 +79,16 @@ correlation_matrix = df[numeric_cols].corr()  # Only pass numeric columns for co
 plt.figure(figsize=(10, 8))
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
 plt.title('Correlation Heatmap')
+
+# Split the dataset into features (X) and target (y)
+X = df.drop(columns=["survived"])  # Features (independent variables)
+y = df["survived"]  # Target variable (dependent variable)
+
+# Split the data into training and testing sets (33% for testing)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+print(f"Training set shape: {X_train.shape}, {y_train.shape}")
+print(f"Test set shape: {X_test.shape}, {y_test.shape}")
+
+# Display the plots
+plt.tight_layout()  
 plt.show()
