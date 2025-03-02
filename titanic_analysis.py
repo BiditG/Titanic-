@@ -1,6 +1,7 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, LabelEncoder  # Corrected import
 
 # Load the Titanic dataset
 df = pd.read_csv("titanic.csv")
@@ -54,6 +55,22 @@ print(df.isnull().sum())  # This should now show no missing values for "age", "e
 # Check for duplicates in the dataset
 print(df.duplicated().sum())
 
+# Define categorical columns (assuming these columns are categorical)
+cat_cols = ["embarked", "embark_town", "deck"]  # You can add more columns here if needed
+
+# Label encoding for categorical columns
+for col in cat_cols:
+    le = LabelEncoder()
+    df[col] = le.fit_transform(df[col])
+
+# Define the feature columns
+feature_cols = df.drop(columns=["survived"]).columns  # Fixed column drop
+
+# Scaling the features (standard scaling and min-max scaling)
+scaler = StandardScaler()
+df[feature_cols] = scaler.fit_transform(df[feature_cols])
+
 # Display the plots
 plt.tight_layout()  
 plt.show()
+
